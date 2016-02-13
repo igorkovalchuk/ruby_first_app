@@ -16,7 +16,7 @@ group :assets do
 
   gem 'uglifier', '>= 1.0.3'
 
-  gem 'sqlite3'
+  # gem 'sqlite3'
   gem 'pg'
 end
 
