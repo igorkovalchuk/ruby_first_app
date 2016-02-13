@@ -1,5 +1,4 @@
-# require 'trig'
-require 'location_by_ip'
+require_dependency 'location_by_ip'
 class Geoip2ServiceController < ApplicationController
   def location
     result = LocationByIp.acquire(request)
