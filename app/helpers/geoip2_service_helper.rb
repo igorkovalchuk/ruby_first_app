@@ -1,0 +1,2 @@
+module Geoip2ServiceHelper
+end
