@@ -1,6 +1,8 @@
 RubyFirstApp::Application.routes.draw do
   get "geoip2_service/location"
 
+  match 'geoip2_service/location/:language' => 'geoip2_service#location'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
