@@ -60,11 +60,34 @@ module LocationByIp
       #----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #
 
       # Rails.logger.debug "Production mode."
-      data = Geoip2.city(ip)
+
+      faraday_options = {:request => {:timeout => 5, :open_timeout => 5}}
+
+      data = {}
+      begin
+        data = Geoip2.city(ip, faraday_options)
+      rescue => e
+        Rails.logger.error "Exception: " + e.inspect + " " + e.message
+        return { :success => false, :exc_class => e.inspect, :exc_message => e.message }
+      end
 
       result = {}
 
+      if data["continent"] != nil
+        if data["continent"]["geoname_id"] != nil
+          result["continent_id"] = data["continent"]["geoname_id"]
+        end
+        if data["continent"]["names"] != nil
+          if data["continent"]["names"]["en"] != nil
+            result["continent_en"] = data["continent"]["names"]["en"]
+          end
+        end
+      end
+
       if data["country"] != nil
+        if data["country"]["geoname_id"] != nil
+          result["country_id"] = data["country"]["geoname_id"]
+        end
         if data["country"]["names"] != nil
           if data["country"]["names"]["en"] != nil
             result["country_en"] = data["country"]["names"]["en"]
@@ -77,6 +100,9 @@ module LocationByIp
       end
 
       if data["city"] != nil
+        if data["city"]["geoname_id"] != nil
+          result["city_id"] = data["city"]["geoname_id"]
+        end
         if data["city"]["names"] != nil
           if data["city"]["names"]["en"] != nil
             result["city_en"] = data["city"]["names"]["en"]
